@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>petproject013</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2a4494;
+            --secondary-color: #4f7cac;
+            --accent-color: #38b6ff;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            background-color: var(--light-color);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 6rem auto 2rem;
+            padding: 0 1rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h3 {
+            color: var(--secondary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin: 2rem 0;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .tab-btn.active {
+            border-bottom: 3px solid var(--accent-color);
+            font-weight: bold;
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        form {
+            background-color: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        textarea {
+            height: 120px;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .social-links li {
+            margin: 0 0.5rem;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                height: 0;
+                flex-direction: column;
+                background-color: var(--primary-color);
+                overflow: hidden;
+                transition: height 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                height: auto;
+                padding: 1rem 0;
+            }
+
+            .nav-links li {
+                margin: 1rem 0;
+                text-align: center;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">WebPerf</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#insights">Insights</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="hamburger">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero fade-in">
+            <h1>Web Services Modeling & Performance</h1>
+            <p>Optimize your web services with cutting-edge modeling techniques and performance analysis tools</p>
+            <a href="#features" class="btn">Explore Features</a>
+        </section>
+
+        <section id="about" class="fade-in">
+            <h2>About Web Services Performance</h2>
+            <p>Web service performance is critical for maintaining user engagement and satisfaction. Our comprehensive approach combines advanced modeling techniques with real-time monitoring to ensure your services operate at peak efficiency.</p>
+            <p>Whether you're managing RESTful APIs, SOAP services, or GraphQL endpoints, our tools and methodologies help you identify bottlenecks, predict scaling issues, and optimize resource utilization.</p>
+        </section>
+
+        <section id="features" class="fade-in">
+            <h2>Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Performance Modeling</h3>
+                    <p>Create accurate models of your web services to predict performance under various load conditions and identify potential bottlenecks before they impact users.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Real-time Monitoring</h3>
+                    <p>Monitor response times, throughput, and resource utilization in real-time with interactive dashboards and customizable alerts.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Load Testing</h3>
+                    <p>Simulate thousands of concurrent users to stress test your services and understand their breaking points and scalability limits.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Optimization Recommendations</h3>
+                    <p>Receive AI-powered recommendations for improving service performance based on analysis of your specific architecture and usage patterns.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>API Performance Benchmarks</h3>
+                    <p>Compare your API performance against industry standards and best practices to identify areas for improvement.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Distributed Tracing</h3>
+                    <p>Trace requests across multiple services and components to identify latency issues and optimize complex service interactions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="insights" class="fade-in">
+            <h2>Performance Insights</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="response-time">Response Time</button>
+                <button class="tab-btn" data-tab="throughput">Throughput</button>
+                <button class="tab-btn" data-tab="resource-usage">Resource Usage</button>
+            </div>
+
+            <div id="response-time" class="tab-content active">
+                <h3>Response Time Analysis</h3>
+                <p>Track average response times across different endpoints and identify slow-performing operations.</p>
+                <div class="chart-container">
+                    <canvas id="responseTimeChart"></canvas>
+                </div>
+            </div>
+
+            <div id="throughput" class="tab-content">
+                <h3>Throughput Analysis</h3>
+                <p>Monitor requests per second your system can handle under different conditions.</p>
+                <div class="chart-container">
+                    <canvas id="throughputChart"></canvas>
+                </div>
+            </div>
+
+            <div id="resource-usage" class="tab-content">
+                <h3>Resource Usage Analysis</h3>
+                <p>Track CPU, memory, and network utilization to identify resource constraints.</p>
+                <div class="chart-container">
+                    <canvas id="resourceChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="fade-in">
+            <h2>Contact Us</h2>
+            <p>Have questions about web service performance optimization? Get in touch with our team of experts.</p>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Your email">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject">
+                        <option value="">Select a subject</option>
+                        <option value="performance">Performance Consultation</option>
+                        <option value="modeling">Service Modeling</option>
+                        <option value="optimization">Optimization Services</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" placeholder="Your message"></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 WebPerf - Web Services Modeling & Performance</p>
+        <ul class="social-links">
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="#">GitHub</a></li>
+        </ul>
+        <p>Designed for optimal performance across all devices</p>
+    </footer>
+
+    <a href="#" class="back-to-top">↑</a>
+
+    <script>
+        $(document).ready(function() {
+            // Mobile navigation
+            $('.hamburger').click(function() {
+                $('.nav-links').toggleClass('active');
+            });
+
+            // Smooth scrolling
+            $('a[href^="#"]').on('click', function(e) {
+                e.preventDefault();
+                var target = $(this.hash);
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 70
+                    }, 500);
+                    // Close mobile menu if open
+                    $('.nav-links').removeClass('active');
+                }
+            });
+
+            // Back to top button
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 300) {
+                    $('.back-to-top').addClass('visible');
+                } else {
+                    $('.back-to-top').removeClass('visible');
+                }
+
+                // Fade in elements on scroll
+                $('.fade-in').each(function() {
+                    var position = $(this).offset().top;
+                    var scrollPosition = $(window).scrollTop() + $(window).height();
+                    
+                    if (scrollPosition > position) {
+                        $(this).addClass('visible');
+                    }
+                });
+            });
+
+            // Tabs
+            $('.tab-btn').click(function() {
+                var tab = $(this).data('tab');
+                
+                $('.tab-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                $('.tab-content').removeClass('active');
+                $('#' + tab).addClass('active');
+            });
+
+            // Form validation
+            $('#contact-form').submit(function(e) {
+                e.preventDefault();
+                // Simple validation
+                var name = $('#name').val();
+                var email = $('#email').val();
+                var message = $('#message').val();
+                
+                if (name && email && message) {
+                    alert('Thanks for your message! We\'ll get back to you soon.');
+                    this.reset();
+                } else {
+                    alert('Please fill in all required fields.');
+                }
+            });
+
+            // Charts
+            // Response Time Chart
+            var responseTimeCtx = $('#responseTimeChart');
+            var responseTimeChart = new Chart(responseTimeCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'GET Endpoints',
+                        data: [120, 115, 100, 95, 85, 75],
+                        borderColor: '#2a4494',
+                        backgroundColor: 'rgba(42, 68, 148, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'POST Endpoints',
+                        data: [200, 185, 175, 165, 150, 135],
+                        borderColor: '#38b6ff',
+                        backgroundColor: 'rgba(56, 182, 255, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Response Time (ms)'
+                            },
+                            beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Throughput Chart
+            var throughputCtx = $('#throughputChart');
+            var throughputChart = new Chart(throughputCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['10', '50', '100', '500', '1000', '5000'],
+                    datasets: [{
+                        label: 'Requests per Second',
+                        data: [950, 900, 850, 700, 500, 250],
+                        backgroundColor: '#4f7cac'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Throughput (req/s)'
+                            },
+                            beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Concurrent Users'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Resource Usage Chart
+            var resourceCtx = $('#resourceChart');
+            var resourceChart = new Chart(resourceCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['CPU', 'Memory', 'Network I/O', 'Disk I/O', 'Database', 'Cache'],
+                    datasets: [{
+                        label: 'Current Usage',
+                        data: [70, 65, 80, 45, 85, 30],
+                        backgroundColor: 'rgba(56, 182, 255, 0.2)',
+                        borderColor: '#38b6ff',
+                        pointBackgroundColor: '#38b6ff'
+                    }, {
+                        label: 'Optimized Target',
+                        data: [40, 45, 50, 30, 55, 25],
+                        backgroundColor: 'rgba(42, 68, 148, 0.2)',
+                        borderColor: '#2a4494',
+                        pointBackgroundColor: '#2a4494'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
